@@ -24,9 +24,7 @@ void setPinLow(int pinNo);
 
 
 
-void readPin(int pinNo);
-
-int getPin(int pinNo);
+int readPin(int pinNo);
 
 
 

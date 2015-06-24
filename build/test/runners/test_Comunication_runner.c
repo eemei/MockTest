@@ -38,7 +38,7 @@ extern void tearDown(void);
 extern void test_sendBitHigh_given_xxxx_should_xxxx(void);
 extern void test_sendBitLow_given_xxxx_should_xxxx(void);
 extern void test_readBit_given_xxxx_should_xxxx(void);
-extern void test_writeData_given_0xCD_and_addr_0XDEAD_and_DATA_0XC0_should_send_0XCDDEADC0(void);
+extern void test_writeData_given_0xCD_and_addr_0xDEAD_and_DATA_0xC0_should_send_0XCDDEADC0(void);
 extern void test_readData_given_0xAB_and_addr_0XFACE_should_sent_0xABFACE_and_turnaround_and_receive_0xBE(void);
 
 
@@ -78,8 +78,8 @@ int main(void)
   RUN_TEST(test_sendBitHigh_given_xxxx_should_xxxx, 12);
   RUN_TEST(test_sendBitLow_given_xxxx_should_xxxx, 18);
   RUN_TEST(test_readBit_given_xxxx_should_xxxx, 24);
-  RUN_TEST(test_writeData_given_0xCD_and_addr_0XDEAD_and_DATA_0XC0_should_send_0XCDDEADC0, 32);
-  RUN_TEST(test_readData_given_0xAB_and_addr_0XFACE_should_sent_0xABFACE_and_turnaround_and_receive_0xBE, 46);
+  RUN_TEST(test_writeData_given_0xCD_and_addr_0xDEAD_and_DATA_0xC0_should_send_0XCDDEADC0, 33);
+  RUN_TEST(test_readData_given_0xAB_and_addr_0XFACE_should_sent_0xABFACE_and_turnaround_and_receive_0xBE, 172);
 
   CMock_Guts_MemFreeFinal();
   return (UnityEnd());

@@ -23,8 +23,7 @@ pinNO is the pin read from
 return 1 if pin is high, otherwise 0
 
 */
-void readPin(int pinNo);
-int getPin(int pinNo);
+int readPin(int pinNo);
 /*
 *brief the pin as output
 *return pinNo is the pin set as output

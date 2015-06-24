@@ -32,18 +32,12 @@ void setPinLow_CMockIgnore(void);
 void setPinLow_CMockExpect(UNITY_LINE_TYPE cmock_line, int pinNo);
 typedef void (* CMOCK_setPinLow_CALLBACK)(int pinNo, int cmock_num_calls);
 void setPinLow_StubWithCallback(CMOCK_setPinLow_CALLBACK Callback);
-#define readPin_Ignore() readPin_CMockIgnore()
-void readPin_CMockIgnore(void);
-#define readPin_Expect(pinNo) readPin_CMockExpect(__LINE__, pinNo)
-void readPin_CMockExpect(UNITY_LINE_TYPE cmock_line, int pinNo);
-typedef void (* CMOCK_readPin_CALLBACK)(int pinNo, int cmock_num_calls);
+#define readPin_IgnoreAndReturn(cmock_retval) readPin_CMockIgnoreAndReturn(__LINE__, cmock_retval)
+void readPin_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, int cmock_to_return);
+#define readPin_ExpectAndReturn(pinNo, cmock_retval) readPin_CMockExpectAndReturn(__LINE__, pinNo, cmock_retval)
+void readPin_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, int pinNo, int cmock_to_return);
+typedef int (* CMOCK_readPin_CALLBACK)(int pinNo, int cmock_num_calls);
 void readPin_StubWithCallback(CMOCK_readPin_CALLBACK Callback);
-#define getPin_IgnoreAndReturn(cmock_retval) getPin_CMockIgnoreAndReturn(__LINE__, cmock_retval)
-void getPin_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, int cmock_to_return);
-#define getPin_ExpectAndReturn(pinNo, cmock_retval) getPin_CMockExpectAndReturn(__LINE__, pinNo, cmock_retval)
-void getPin_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, int pinNo, int cmock_to_return);
-typedef int (* CMOCK_getPin_CALLBACK)(int pinNo, int cmock_num_calls);
-void getPin_StubWithCallback(CMOCK_getPin_CALLBACK Callback);
 #define setPinToOutput_Ignore() setPinToOutput_CMockIgnore()
 void setPinToOutput_CMockIgnore(void);
 #define setPinToOutput_Expect(pinNo) setPinToOutput_CMockExpect(__LINE__, pinNo)

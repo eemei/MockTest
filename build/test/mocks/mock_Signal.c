@@ -25,19 +25,11 @@ typedef struct _CMOCK_setPinLow_CALL_INSTANCE
 typedef struct _CMOCK_readPin_CALL_INSTANCE
 {
   UNITY_LINE_TYPE LineNumber;
-  int CallOrder;
-  int Expected_pinNo;
-
-} CMOCK_readPin_CALL_INSTANCE;
-
-typedef struct _CMOCK_getPin_CALL_INSTANCE
-{
-  UNITY_LINE_TYPE LineNumber;
   int ReturnVal;
   int CallOrder;
   int Expected_pinNo;
 
-} CMOCK_getPin_CALL_INSTANCE;
+} CMOCK_readPin_CALL_INSTANCE;
 
 typedef struct _CMOCK_setPinToOutput_CALL_INSTANCE
 {
@@ -66,14 +58,10 @@ static struct mock_SignalInstance
   int setPinLow_CallbackCalls;
   CMOCK_MEM_INDEX_TYPE setPinLow_CallInstance;
   int readPin_IgnoreBool;
+  int readPin_FinalReturn;
   CMOCK_readPin_CALLBACK readPin_CallbackFunctionPointer;
   int readPin_CallbackCalls;
   CMOCK_MEM_INDEX_TYPE readPin_CallInstance;
-  int getPin_IgnoreBool;
-  int getPin_FinalReturn;
-  CMOCK_getPin_CALLBACK getPin_CallbackFunctionPointer;
-  int getPin_CallbackCalls;
-  CMOCK_MEM_INDEX_TYPE getPin_CallInstance;
   int setPinToOutput_IgnoreBool;
   CMOCK_setPinToOutput_CALLBACK setPinToOutput_CallbackFunctionPointer;
   int setPinToOutput_CallbackCalls;
@@ -106,11 +94,6 @@ void mock_Signal_Verify(void)
   UNITY_TEST_ASSERT(CMOCK_GUTS_NONE == Mock.readPin_CallInstance, cmock_line, "Function 'readPin' called less times than expected.");
   if (Mock.readPin_CallbackFunctionPointer != NULL)
     Mock.readPin_CallInstance = CMOCK_GUTS_NONE;
-  if (Mock.getPin_IgnoreBool)
-    Mock.getPin_CallInstance = CMOCK_GUTS_NONE;
-  UNITY_TEST_ASSERT(CMOCK_GUTS_NONE == Mock.getPin_CallInstance, cmock_line, "Function 'getPin' called less times than expected.");
-  if (Mock.getPin_CallbackFunctionPointer != NULL)
-    Mock.getPin_CallInstance = CMOCK_GUTS_NONE;
   if (Mock.setPinToOutput_IgnoreBool)
     Mock.setPinToOutput_CallInstance = CMOCK_GUTS_NONE;
   UNITY_TEST_ASSERT(CMOCK_GUTS_NONE == Mock.setPinToOutput_CallInstance, cmock_line, "Function 'setPinToOutput' called less times than expected.");
@@ -138,8 +121,6 @@ void mock_Signal_Destroy(void)
   Mock.setPinLow_CallbackCalls = 0;
   Mock.readPin_CallbackFunctionPointer = NULL;
   Mock.readPin_CallbackCalls = 0;
-  Mock.getPin_CallbackFunctionPointer = NULL;
-  Mock.getPin_CallbackCalls = 0;
   Mock.setPinToOutput_CallbackFunctionPointer = NULL;
   Mock.setPinToOutput_CallbackCalls = 0;
   Mock.setPinToInput_CallbackFunctionPointer = NULL;
@@ -254,19 +235,21 @@ void setPinLow_StubWithCallback(CMOCK_setPinLow_CALLBACK Callback)
   Mock.setPinLow_CallbackFunctionPointer = Callback;
 }
 
-void readPin(int pinNo)
+int readPin(int pinNo)
 {
   UNITY_LINE_TYPE cmock_line = TEST_LINE_NUM;
   CMOCK_readPin_CALL_INSTANCE* cmock_call_instance = (CMOCK_readPin_CALL_INSTANCE*)CMock_Guts_GetAddressFor(Mock.readPin_CallInstance);
   Mock.readPin_CallInstance = CMock_Guts_MemNext(Mock.readPin_CallInstance);
   if (Mock.readPin_IgnoreBool)
   {
-    return;
+    if (cmock_call_instance == NULL)
+      return (int)Mock.readPin_FinalReturn;
+    Mock.readPin_FinalReturn = cmock_call_instance->ReturnVal;
+    return (int)cmock_call_instance->ReturnVal;
   }
   if (Mock.readPin_CallbackFunctionPointer != NULL)
   {
-    Mock.readPin_CallbackFunctionPointer(pinNo, Mock.readPin_CallbackCalls++);
-    return;
+    return Mock.readPin_CallbackFunctionPointer(pinNo, Mock.readPin_CallbackCalls++);
   }
   UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, "Function 'readPin' called more times than expected.");
   cmock_line = cmock_call_instance->LineNumber;
@@ -277,6 +260,7 @@ void readPin(int pinNo)
   {
     UNITY_TEST_ASSERT_EQUAL_INT(cmock_call_instance->Expected_pinNo, pinNo, cmock_line, "Function 'readPin' called with unexpected value for argument 'pinNo'.");
   }
+  return cmock_call_instance->ReturnVal;
 }
 
 void CMockExpectParameters_readPin(CMOCK_readPin_CALL_INSTANCE* cmock_call_instance, int pinNo)
@@ -284,12 +268,20 @@ void CMockExpectParameters_readPin(CMOCK_readPin_CALL_INSTANCE* cmock_call_insta
   cmock_call_instance->Expected_pinNo = pinNo;
 }
 
-void readPin_CMockIgnore(void)
+void readPin_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, int cmock_to_return)
 {
+  CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_readPin_CALL_INSTANCE));
+  CMOCK_readPin_CALL_INSTANCE* cmock_call_instance = (CMOCK_readPin_CALL_INSTANCE*)CMock_Guts_GetAddressFor(cmock_guts_index);
+  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, "CMock has run out of memory. Please allocate more.");
+  memset(cmock_call_instance, 0, sizeof(*cmock_call_instance));
+  Mock.readPin_CallInstance = CMock_Guts_MemChain(Mock.readPin_CallInstance, cmock_guts_index);
+  Mock.readPin_IgnoreBool = (int)0;
+  cmock_call_instance->LineNumber = cmock_line;
+  cmock_call_instance->ReturnVal = cmock_to_return;
   Mock.readPin_IgnoreBool = (int)1;
 }
 
-void readPin_CMockExpect(UNITY_LINE_TYPE cmock_line, int pinNo)
+void readPin_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, int pinNo, int cmock_to_return)
 {
   CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_readPin_CALL_INSTANCE));
   CMOCK_readPin_CALL_INSTANCE* cmock_call_instance = (CMOCK_readPin_CALL_INSTANCE*)CMock_Guts_GetAddressFor(cmock_guts_index);
@@ -300,76 +292,12 @@ void readPin_CMockExpect(UNITY_LINE_TYPE cmock_line, int pinNo)
   cmock_call_instance->LineNumber = cmock_line;
   cmock_call_instance->CallOrder = ++GlobalExpectCount;
   CMockExpectParameters_readPin(cmock_call_instance, pinNo);
+  cmock_call_instance->ReturnVal = cmock_to_return;
 }
 
 void readPin_StubWithCallback(CMOCK_readPin_CALLBACK Callback)
 {
   Mock.readPin_CallbackFunctionPointer = Callback;
-}
-
-int getPin(int pinNo)
-{
-  UNITY_LINE_TYPE cmock_line = TEST_LINE_NUM;
-  CMOCK_getPin_CALL_INSTANCE* cmock_call_instance = (CMOCK_getPin_CALL_INSTANCE*)CMock_Guts_GetAddressFor(Mock.getPin_CallInstance);
-  Mock.getPin_CallInstance = CMock_Guts_MemNext(Mock.getPin_CallInstance);
-  if (Mock.getPin_IgnoreBool)
-  {
-    if (cmock_call_instance == NULL)
-      return (int)Mock.getPin_FinalReturn;
-    Mock.getPin_FinalReturn = cmock_call_instance->ReturnVal;
-    return (int)cmock_call_instance->ReturnVal;
-  }
-  if (Mock.getPin_CallbackFunctionPointer != NULL)
-  {
-    return Mock.getPin_CallbackFunctionPointer(pinNo, Mock.getPin_CallbackCalls++);
-  }
-  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, "Function 'getPin' called more times than expected.");
-  cmock_line = cmock_call_instance->LineNumber;
-  if (cmock_call_instance->CallOrder > ++GlobalVerifyOrder)
-    UNITY_TEST_FAIL(cmock_line, "Function 'getPin' called earlier than expected.");
-  if (cmock_call_instance->CallOrder < GlobalVerifyOrder)
-    UNITY_TEST_FAIL(cmock_line, "Function 'getPin' called later than expected.");
-  {
-    UNITY_TEST_ASSERT_EQUAL_INT(cmock_call_instance->Expected_pinNo, pinNo, cmock_line, "Function 'getPin' called with unexpected value for argument 'pinNo'.");
-  }
-  return cmock_call_instance->ReturnVal;
-}
-
-void CMockExpectParameters_getPin(CMOCK_getPin_CALL_INSTANCE* cmock_call_instance, int pinNo)
-{
-  cmock_call_instance->Expected_pinNo = pinNo;
-}
-
-void getPin_CMockIgnoreAndReturn(UNITY_LINE_TYPE cmock_line, int cmock_to_return)
-{
-  CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_getPin_CALL_INSTANCE));
-  CMOCK_getPin_CALL_INSTANCE* cmock_call_instance = (CMOCK_getPin_CALL_INSTANCE*)CMock_Guts_GetAddressFor(cmock_guts_index);
-  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, "CMock has run out of memory. Please allocate more.");
-  memset(cmock_call_instance, 0, sizeof(*cmock_call_instance));
-  Mock.getPin_CallInstance = CMock_Guts_MemChain(Mock.getPin_CallInstance, cmock_guts_index);
-  Mock.getPin_IgnoreBool = (int)0;
-  cmock_call_instance->LineNumber = cmock_line;
-  cmock_call_instance->ReturnVal = cmock_to_return;
-  Mock.getPin_IgnoreBool = (int)1;
-}
-
-void getPin_CMockExpectAndReturn(UNITY_LINE_TYPE cmock_line, int pinNo, int cmock_to_return)
-{
-  CMOCK_MEM_INDEX_TYPE cmock_guts_index = CMock_Guts_MemNew(sizeof(CMOCK_getPin_CALL_INSTANCE));
-  CMOCK_getPin_CALL_INSTANCE* cmock_call_instance = (CMOCK_getPin_CALL_INSTANCE*)CMock_Guts_GetAddressFor(cmock_guts_index);
-  UNITY_TEST_ASSERT_NOT_NULL(cmock_call_instance, cmock_line, "CMock has run out of memory. Please allocate more.");
-  memset(cmock_call_instance, 0, sizeof(*cmock_call_instance));
-  Mock.getPin_CallInstance = CMock_Guts_MemChain(Mock.getPin_CallInstance, cmock_guts_index);
-  Mock.getPin_IgnoreBool = (int)0;
-  cmock_call_instance->LineNumber = cmock_line;
-  cmock_call_instance->CallOrder = ++GlobalExpectCount;
-  CMockExpectParameters_getPin(cmock_call_instance, pinNo);
-  cmock_call_instance->ReturnVal = cmock_to_return;
-}
-
-void getPin_StubWithCallback(CMOCK_getPin_CALLBACK Callback)
-{
-  Mock.getPin_CallbackFunctionPointer = Callback;
 }
 
 void setPinToOutput(int pinNo)
