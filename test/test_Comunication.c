@@ -280,35 +280,39 @@ void test_readData_given_0xAB_and_addr_0XFACE_should_sent_0xABFACE_and_turnaroun
   setPinLow_Expect(CLK_PIN);
   setPinHigh_Expect(CLK_PIN);
   
-  // setPinLow_Expect(CLK_PIN);
-  // setPinHigh_Expect(CLK_PIN);
-  // readPin_ExpectAndReturn(IO_PIN, 0);
-  // setPinLow_Expect(CLK_PIN);
-  // setPinHigh_Expect(CLK_PIN);
-  // readPin_ExpectAndReturn(IO_PIN, 1);
-  // setPinLow_Expect(CLK_PIN);
-  // setPinHigh_Expect(CLK_PIN);
-  // readPin_ExpectAndReturn(IO_PIN, 1);
-  // setPinLow_Expect(CLK_PIN);
-  // setPinHigh_Expect(CLK_PIN);
-  // readPin_ExpectAndReturn(IO_PIN, 1);
-  // setPinLow_Expect(CLK_PIN);
-  // setPinHigh_Expect(CLK_PIN);
-  // readPin_ExpectAndReturn(IO_PIN, 1);
-  // setPinLow_Expect(CLK_PIN);
-  // setPinHigh_Expect(CLK_PIN);
-  // readPin_ExpectAndReturn(IO_PIN, 1);
-  // setPinLow_Expect(CLK_PIN);
-  // setPinHigh_Expect(CLK_PIN);
- // readPin_ExpectAndReturn(IO_PIN, 0);
-  // setPinLow_Expect(CLK_PIN);
-  // setPinHigh_Expect(CLK_PIN);
-  // readPin_ExpectAndReturn(IO_PIN, 1);
-  
-  
-  
+
+// read 0 .....0xBE  
+	setPinHigh_Expect(CLK_PIN);
+	setPinLow_Expect(CLK_PIN);
+	readPin_ExpectAndReturn(IO_PIN,0);
+//1
+	setPinHigh_Expect(CLK_PIN);
+	setPinLow_Expect(CLK_PIN);
+	readPin_ExpectAndReturn(IO_PIN,1);
+//2	
+	setPinHigh_Expect(CLK_PIN);
+	setPinLow_Expect(CLK_PIN);
+	readPin_ExpectAndReturn(IO_PIN,1);
+//3
+	setPinHigh_Expect(CLK_PIN);
+	setPinLow_Expect(CLK_PIN);
+	readPin_ExpectAndReturn(IO_PIN,1);
+//4	
+	setPinHigh_Expect(CLK_PIN);
+	setPinLow_Expect(CLK_PIN);
+	readPin_ExpectAndReturn(IO_PIN,1);
+//5	
+	setPinHigh_Expect(CLK_PIN);
+	setPinLow_Expect(CLK_PIN);
+	readPin_ExpectAndReturn(IO_PIN,1);
+//6	
+	setPinHigh_Expect(CLK_PIN);
+	setPinLow_Expect(CLK_PIN);
+	readPin_ExpectAndReturn(IO_PIN,0);
+//7	
+	setPinHigh_Expect(CLK_PIN);
+	setPinLow_Expect(CLK_PIN);
+	readPin_ExpectAndReturn(IO_PIN,1);
+	
   uint8_t getData = readData(0xAB,0xFACE);
- 
 }
-
-

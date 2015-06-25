@@ -557,8 +557,76 @@ void test_readData_given_0xAB_and_addr_0XFACE_should_sent_0xABFACE_and_turnaroun
 
   setPinHigh_CMockExpect(281, 4);
 
+
+
+
+
+
+
+ setPinHigh_CMockExpect(285, 4);
+
+ setPinLow_CMockExpect(286, 4);
+
+ readPin_CMockExpectAndReturn(287, 4, 0);
+
+
+
+ setPinHigh_CMockExpect(289, 4);
+
+ setPinLow_CMockExpect(290, 4);
+
+ readPin_CMockExpectAndReturn(291, 4, 1);
+
+
+
+ setPinHigh_CMockExpect(293, 4);
+
+ setPinLow_CMockExpect(294, 4);
+
+ readPin_CMockExpectAndReturn(295, 4, 1);
+
+
+
+ setPinHigh_CMockExpect(297, 4);
+
+ setPinLow_CMockExpect(298, 4);
+
+ readPin_CMockExpectAndReturn(299, 4, 1);
+
+
+
+ setPinHigh_CMockExpect(301, 4);
+
+ setPinLow_CMockExpect(302, 4);
+
+ readPin_CMockExpectAndReturn(303, 4, 1);
+
+
+
+ setPinHigh_CMockExpect(305, 4);
+
+ setPinLow_CMockExpect(306, 4);
+
+ readPin_CMockExpectAndReturn(307, 4, 1);
+
+
+
+ setPinHigh_CMockExpect(309, 4);
+
+ setPinLow_CMockExpect(310, 4);
+
+ readPin_CMockExpectAndReturn(311, 4, 0);
+
+
+
+ setPinHigh_CMockExpect(313, 4);
+
+ setPinLow_CMockExpect(314, 4);
+
+ readPin_CMockExpectAndReturn(315, 4, 1);
+
+
+
   uint8_t getData = readData(0xAB,0xFACE);
-
-
 
 }

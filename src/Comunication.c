@@ -22,11 +22,11 @@ uint32_t readBit(int pinNo){
   return bit;
 }
 /*
-* brief perform write to read turn around
-*@param pinNo is the pin to do turn around
-*step: 1)set pin as input
-*       2) set clk low
-*       3) set clk high
+*	@brief perform write to read turn around
+*	@param pinNo is the pin to do turn around
+*	step: 1)set pin as input
+*         2) set clk low
+*         3) set clk high
 */
 void readturnAroundIO(int pinNo){
   setPinToInput(IO_PIN);
@@ -34,11 +34,11 @@ void readturnAroundIO(int pinNo){
   setPinHigh(CLK_PIN);
 }
 /*
-* brief perform write to read turn around
-*@param pinNo is the pin to do turn around
-*step: 1)set pin as output
-*       2) set clk high
-*       3) set clk low
+*	@brief perform write to read turn around
+*	@param pinNo is the pin to do turn around
+*	step: 1)set pin as output
+*         2) set clk high
+*         3) set clk low
 */
 void writeturnAroundIO(int pinNo){
   setPinToOutput(IO_PIN);
@@ -47,9 +47,9 @@ void writeturnAroundIO(int pinNo){
 }
 
 /*
-* 1) cmd = 0xCD
-* 2) ADDRESS = 0xDEAD
-* 3) WRITE
+* 	1) cmd = 0xCD
+* 	2) ADDRESS = 0xDEAD
+* 	3) WRITE
 */
 void writeData(uint8_t cmd, uint16_t address, uint8_t data){
 
@@ -58,9 +58,7 @@ void writeData(uint8_t cmd, uint16_t address, uint8_t data){
   uint16_t comp2;
   
   writeturnAroundIO(IO_PIN);
-  // //setPinToOutput (IO_PIN);
- // //setPinLow(CLK_PIN);
- // //setPinHigh(CLK_PIN);
+
 
   for(i=0; i<8;i++){
     comp1 = cmd & 0x01;
@@ -95,8 +93,10 @@ void writeData(uint8_t cmd, uint16_t address, uint8_t data){
     data = data >>1;
   }
 }
+
+
 /*
-*  1) write cmd address
+*  1) write command & address
 *  2) read data
 *
 */
@@ -106,14 +106,10 @@ uint8_t readData(uint8_t cmd, uint16_t address){
   int j = 0;
   uint8_t comp1, getData=0x00, bit;
   uint16_t comp2;
-  //readturnAroundIO(IO_PIN);
-  //setPinToInput(IO_PIN);
-  //setPinToInput(CLK_PIN);
-	//writeturnAroundIO(IO_PIN);
-  setPinToOutput(IO_PIN);
-  setPinHigh(CLK_PIN);
-  setPinLow(CLK_PIN);
-    for (i=0; i<8;i++){
+
+  writeturnAroundIO(IO_PIN);
+
+  for (i=0; i<8;i++){
     comp1 = cmd & 0x01;
     if (comp1 ==1){
       sendBitHigh (IO_PIN);
@@ -121,7 +117,7 @@ uint8_t readData(uint8_t cmd, uint16_t address){
     else {
       sendBitLow(IO_PIN);
     }
-    cmd = cmd >> 1;
+  cmd = cmd >> 1;
   }
 
   for (i = 0; i<16; i++){
@@ -132,12 +128,10 @@ uint8_t readData(uint8_t cmd, uint16_t address){
     else {
       sendBitLow(IO_PIN);
     }
-    address = address >> 1;
+  address = address >> 1;
   }
- // readturnAroundIO(IO_PIN);
-  setPinToInput(IO_PIN);
-  setPinLow(CLK_PIN);
-  setPinHigh(CLK_PIN);
+  
+  readturnAroundIO(IO_PIN);
  
   // //read  BE = 10111110
   // /* 10111110
@@ -149,10 +143,10 @@ uint8_t readData(uint8_t cmd, uint16_t address){
   // *  10
   // *  0
   // */
-	// for (j=0; j<8;j++){
-	  // bit = readBit(IO_PIN);
-      // // getData = bit<<i;
-	// }
+  for (j=0; j<8;j++){
+	bit = readBit(IO_PIN);
+    getData = bit<<i;
+  }
   return getData;
 }
 
